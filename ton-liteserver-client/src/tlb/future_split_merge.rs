@@ -7,27 +7,36 @@ use toner::tlb::bits::de::{BitReader, BitReaderExt, BitUnpack};
 /// ```
 #[derive(Debug, Clone)]
 pub enum FutureSplitMerge {
-    None, // fsm_none$0
+    None,                                      // fsm_none$0
     Split { split_utime: u32, interval: u32 }, // fsm_split$10
     Merge { merge_utime: u32, interval: u32 }, // fsm_merge$11
 }
 
 impl BitUnpack for FutureSplitMerge {
-    fn unpack<R>(mut reader: R) -> Result<Self, R::Error> where R: BitReader {
-        if !reader.read_bit()? {
-            return Ok(FutureSplitMerge::None)
+    fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
+    where
+        R: BitReader,
+    {
+        if !reader.read_bit()?.unwrap_or_default() {
+            return Ok(FutureSplitMerge::None);
         }
 
-        if !reader.read_bit()? {
+        if !reader.read_bit()?.unwrap_or_default() {
             let split_utime = reader.unpack()?;
             let interval = reader.unpack()?;
 
-            Ok(FutureSplitMerge::Split { split_utime, interval })
+            Ok(FutureSplitMerge::Split {
+                split_utime,
+                interval,
+            })
         } else {
             let merge_utime = reader.unpack()?;
             let interval = reader.unpack()?;
 
-            Ok(FutureSplitMerge::Merge { merge_utime, interval })
+            Ok(FutureSplitMerge::Merge {
+                merge_utime,
+                interval,
+            })
         }
     }
 }
