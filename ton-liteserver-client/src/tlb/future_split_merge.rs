@@ -17,11 +17,11 @@ impl BitUnpack for FutureSplitMerge {
     where
         R: BitReader,
     {
-        if !reader.read_bit()?.unwrap_or_default() {
+        if !reader.unpack::<bool>()? {
             return Ok(FutureSplitMerge::None);
         }
 
-        if !reader.read_bit()?.unwrap_or_default() {
+        if !reader.unpack::<bool>()? {
             let split_utime = reader.unpack()?;
             let interval = reader.unpack()?;
 
