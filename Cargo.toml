@@ -53,3 +53,13 @@ reqwest = { version = "0.12", features = ["rustls-tls", "hickory-dns"], default-
 hickory-resolver = { version = "0.24", features = ["tokio-runtime"] }
 tokio-retry = "0.3"
 derive_more = { version = "1.0", features = ["debug"] }
+quote = "1.0"
+syn = "2.0"
+prettyplease = "0.2"
+convert_case = "0.7"
+nom = "8.0.0"
+crc32fast = "1.4.2"
+sha2 = "0.10"
+aes = "0.8"
+ctr = "0.9"
+ed25519-dalek = { version = "2.1", features = ["rand_core", "hazmat"] }
