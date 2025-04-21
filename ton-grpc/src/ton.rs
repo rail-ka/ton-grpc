@@ -1,10 +1,12 @@
-use std::str::FromStr;
-use anyhow::anyhow;
-use tonlibjson_client::address::{AccountAddressData};
-use tonlibjson_client::block;
-use tonlibjson_client::block::{MsgBoxedData, MsgDataDecryptedText, MsgDataEncryptedText, MsgDataRaw, MsgDataText};
 use crate::ton::get_account_state_response::AccountState;
 use crate::ton::message::MsgData;
+use anyhow::anyhow;
+use std::str::FromStr;
+use tonlibjson_client::address::AccountAddressData;
+use tonlibjson_client::block;
+use tonlibjson_client::block::{
+    MsgBoxedData, MsgDataDecryptedText, MsgDataEncryptedText, MsgDataRaw, MsgDataText,
+};
 
 tonic::include_proto!("ton");
 
@@ -41,7 +43,33 @@ impl From<(i32, block::BlocksShortTxId)> for TransactionId {
         Self {
             account_address: address,
             lt: value.lt,
-            hash: value.hash
+            hash: value.hash,
+        }
+    }
+}
+
+impl From<block::BlocksHeader> for BlocksHeader {
+    fn from(value: block::BlocksHeader) -> Self {
+        Self {
+            id: Some(value.id.into()),
+            global_id: value.global_id,
+            version: value.version,
+            flags: value.flags,
+            after_merge: value.after_merge,
+            after_split: value.after_split,
+            before_split: value.before_split,
+            want_merge: value.want_merge,
+            want_split: value.want_split,
+            validator_list_hash_short: value.validator_list_hash_short,
+            catchain_seqno: value.catchain_seqno,
+            min_ref_mc_seqno: value.min_ref_mc_seqno,
+            is_key_block: value.is_key_block,
+            prev_key_block_seqno: value.prev_key_block_seqno,
+            start_lt: value.start_lt,
+            end_lt: value.end_lt,
+            gen_utime: value.gen_utime,
+            vert_seqno: value.vert_seqno,
+            prev_blocks: value.prev_blocks.iter().cloned().map(Into::into).collect(),
         }
     }
 }
@@ -51,7 +79,7 @@ impl From<(&AccountAddressData, block::InternalTransactionId)> for TransactionId
         Self {
             account_address: account_address.to_raw_string(),
             lt: tx_id.lt,
-            hash: tx_id.hash
+            hash: tx_id.hash,
         }
     }
 }
@@ -60,7 +88,7 @@ impl From<TransactionId> for block::InternalTransactionId {
     fn from(value: TransactionId) -> Self {
         Self {
             hash: value.hash,
-            lt: value.lt
+            lt: value.lt,
         }
     }
 }
@@ -69,7 +97,7 @@ impl From<PartialTransactionId> for block::InternalTransactionId {
     fn from(value: PartialTransactionId) -> Self {
         Self {
             hash: value.hash,
-            lt: value.lt
+            lt: value.lt,
         }
     }
 }
@@ -79,11 +107,11 @@ impl From<block::RawFullAccountState> for AccountState {
         if !value.code.is_empty() {
             AccountState::Active(ActiveAccountState {
                 code: value.code,
-                data: value.data
+                data: value.data,
             })
         } else if !value.frozen_hash.is_empty() {
             AccountState::Frozen(FrozenAccountState {
-                frozen_hash: value.frozen_hash
+                frozen_hash: value.frozen_hash,
             })
         } else {
             AccountState::Uninitialized(UninitializedAccountState {})
@@ -93,20 +121,23 @@ impl From<block::RawFullAccountState> for AccountState {
 
 impl From<block::TvmCell> for TvmCell {
     fn from(value: block::TvmCell) -> Self {
-        Self {
-            bytes: value.bytes
-        }
+        Self { bytes: value.bytes }
     }
 }
 
 impl From<MsgBoxedData> for MsgData {
     fn from(value: MsgBoxedData) -> Self {
-
         match value {
-            MsgBoxedData::MsgDataRaw(MsgDataRaw { body, init_state }) => { Self::Raw(MessageDataRaw { body, init_state })}
-            MsgBoxedData::MsgDataText(MsgDataText { text }) => { Self::Text(MessageDataText { text })}
-            MsgBoxedData::MsgDataDecryptedText(MsgDataDecryptedText { text }) => { Self::DecryptedText(MessageDataDecryptedText { text }) }
-            MsgBoxedData::MsgDataEncryptedText(MsgDataEncryptedText { text }) => { Self::EncryptedText(MessageDataEncryptedText { text }) }
+            MsgBoxedData::MsgDataRaw(MsgDataRaw { body, init_state }) => {
+                Self::Raw(MessageDataRaw { body, init_state })
+            }
+            MsgBoxedData::MsgDataText(MsgDataText { text }) => Self::Text(MessageDataText { text }),
+            MsgBoxedData::MsgDataDecryptedText(MsgDataDecryptedText { text }) => {
+                Self::DecryptedText(MessageDataDecryptedText { text })
+            }
+            MsgBoxedData::MsgDataEncryptedText(MsgDataEncryptedText { text }) => {
+                Self::EncryptedText(MessageDataEncryptedText { text })
+            }
         }
     }
 }
@@ -145,7 +176,9 @@ impl TryFrom<(i32, block::RawTransaction)> for Transaction {
     type Error = anyhow::Error;
 
     fn try_from((chain_id, value): (i32, block::RawTransaction)) -> Result<Self, Self::Error> {
-        let address = value.address.account_address
+        let address = value
+            .address
+            .account_address
             .as_ref()
             .ok_or(anyhow!("empty address"))
             .and_then(|f| AccountAddressData::from_str(f))?

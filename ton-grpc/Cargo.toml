@@ -2,7 +2,7 @@
 
 [package]
 name = "ton-grpc"
-version = "0.10.7"
+version = "0.11.2"
 edition = "2021"
 authors = ["Andrei Kostylev <a.kostylev@pm.me>"]
 
@@ -28,8 +28,8 @@ url = { workspace = true }
 clap = { workspace = true }
 humantime = { workspace = true }
 either = "1.13"
-derive-new = "0.6.0"
-metrics-exporter-prometheus = { version = "0.15.3", features = ["http-listener"], default-features = false }
+derive-new = "0.7.0"
+metrics-exporter-prometheus = { version = "0.16.2", features = ["http-listener"], default-features = false }
 
 [dev-dependencies]
 tracing-test = { workspace = true }
