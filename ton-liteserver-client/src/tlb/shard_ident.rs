@@ -1,7 +1,7 @@
 use toner::tlb::bits::r#as::NBits;
 use toner::tlb::bits::de::{BitReader, BitReaderExt, BitUnpack};
 
-/// `tlb
+/// ```tlb
 /// shard_ident$00
 /// shard_pfx_bits:(#<= 60)
 /// workchain_id:int32

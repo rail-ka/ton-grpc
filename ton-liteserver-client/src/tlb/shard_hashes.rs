@@ -12,7 +12,7 @@ use toner::ton::hashmap::HashmapE;
 /// ```tlb
 /// _ (HashmapE 32 ^(BinTree ShardDescr)) = ShardHashes;
 /// ```
-/// NOTE[akosyulev0]: next_validator_shard == shard_id
+/// NOTE: next_validator_shard == shard_id
 #[derive(Debug)]
 pub struct ShardHashes(HashMap<u32, Vec<ShardDescr>>);
 
