@@ -7,8 +7,8 @@ use std::sync::Arc;
 use tokio::sync::watch;
 use tokio::sync::watch::Ref;
 use tokio_util::sync::{CancellationToken, DropGuard};
-use ton_client_util::actor::cancellable_actor::CancellableActor;
 use ton_client_util::actor::Actor;
+use ton_client_util::actor::cancellable_actor::CancellableActor;
 use toner::tlb::bits::de::unpack_bytes_fully;
 use toner::ton::boc::BoC;
 use tower::{Service, ServiceExt};
@@ -37,11 +37,11 @@ impl<S> Actor for MasterchainLastBlockHeaderTrackerActor<S>
 where
     S: Send + 'static,
     S: Service<
-        LiteServerGetBlockHeader,
-        Response = LiteServerBoxedBlockHeader,
-        Error: Debug,
-        Future: Send,
-    >,
+            LiteServerGetBlockHeader,
+            Response = LiteServerBoxedBlockHeader,
+            Error: Debug,
+            Future: Send,
+        >,
 {
     type Output = ();
 

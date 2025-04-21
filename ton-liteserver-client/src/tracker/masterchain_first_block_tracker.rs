@@ -12,8 +12,8 @@ use std::time::Duration;
 use tokio::sync::watch;
 use tokio::sync::watch::Ref;
 use tokio_util::sync::{CancellationToken, DropGuard};
-use ton_client_util::actor::cancellable_actor::CancellableActor;
 use ton_client_util::actor::Actor;
+use ton_client_util::actor::cancellable_actor::CancellableActor;
 use toner::tlb::bits::de::unpack_bytes;
 use toner::ton::boc::BoC;
 use tower::Service;
@@ -42,11 +42,11 @@ impl<S> Actor for MasterchainFirstBlockTrackerActor<S>
 where
     S: Send + 'static,
     S: Service<
-        LiteServerLookupBlock,
-        Response = LiteServerBlockHeader,
-        Error = Error,
-        Future: Send,
-    >,
+            LiteServerLookupBlock,
+            Response = LiteServerBlockHeader,
+            Error = Error,
+            Future: Send,
+        >,
     S: Service<LiteServerGetBlock, Response = LiteServerBlockData, Error = Error, Future: Send>,
 {
     type Output = ();

@@ -2,9 +2,9 @@ use crate::tlb::blk_master_info::BlkMasterInfo;
 use crate::tlb::blk_prev_info::BlkPrevInfo;
 use crate::tlb::global_version::GlobalVersion;
 use crate::tlb::shard_ident::ShardIdent;
+use toner::tlb::r#as::{Data, Ref, Same};
 use toner::tlb::bits::de::BitReaderExt;
 use toner::tlb::de::{CellDeserialize, CellParser, CellParserError};
-use toner::tlb::r#as::{Data, Ref, Same};
 
 /// ```tlb
 ///  block_info#9bc7a987

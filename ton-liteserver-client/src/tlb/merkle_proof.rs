@@ -1,8 +1,8 @@
 use crate::tlb::block_header::BlockHeader;
-use toner::tlb::bits::de::BitReaderExt;
-use toner::tlb::bits::r#as::NBits;
-use toner::tlb::de::{CellDeserialize, CellParser, CellParserError};
 use toner::tlb::r#as::{Ref, Same};
+use toner::tlb::bits::r#as::NBits;
+use toner::tlb::bits::de::BitReaderExt;
+use toner::tlb::de::{CellDeserialize, CellParser, CellParserError};
 
 /// ```tlb
 /// !merkle_proof#03 {X:Type} virtual_hash:bits256 depth:uint16 virtual_root:^X = MERKLE_PROOF X;

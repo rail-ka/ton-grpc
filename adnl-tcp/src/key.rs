@@ -1,5 +1,6 @@
 use ed25519_dalek::hazmat::ExpandedSecretKey;
 use ed25519_dalek::{SigningKey, VerifyingKey};
+use rand::Rng;
 use sha2::{Digest, Sha256};
 
 #[derive(Debug, Eq, PartialEq)]
@@ -38,7 +39,8 @@ pub struct Ed25519Key {
 
 impl Ed25519Key {
     pub fn generate() -> Self {
-        let private_key = SigningKey::generate(&mut rand::thread_rng());
+        let key: [u8; 32] = rand::rng().random();
+        let private_key = SigningKey::from_bytes(&key);
         let pub_key = private_key.verifying_key();
         let id = Ed25519KeyId::from_public_key_bytes(pub_key.as_bytes());
         let exp_key: ExpandedSecretKey = private_key.as_bytes().into();

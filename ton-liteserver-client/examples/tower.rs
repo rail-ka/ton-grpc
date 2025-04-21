@@ -1,6 +1,6 @@
 use adnl_tcp::client::ServerKey;
 use base64::Engine;
-use futures::{stream, StreamExt};
+use futures::{StreamExt, stream};
 use std::net::{Ipv4Addr, SocketAddrV4};
 use std::time::Duration;
 use ton_liteserver_client::client::LiteServerClient;

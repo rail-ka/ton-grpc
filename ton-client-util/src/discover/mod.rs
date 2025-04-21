@@ -1,19 +1,19 @@
-use crate::actor::cancellable_actor::CancellableActor;
 use crate::actor::Actor;
+use crate::actor::cancellable_actor::CancellableActor;
 use crate::discover::config::{
-    load_ton_config, read_ton_config, LiteServer, LiteServerId, TonConfig,
+    LiteServer, LiteServerId, TonConfig, load_ton_config, read_ton_config,
 };
 use futures::{Stream, StreamExt, TryStreamExt};
+use hickory_resolver::TokioAsyncResolver;
 use hickory_resolver::error::ResolveError;
 use hickory_resolver::system_conf::read_system_conf;
-use hickory_resolver::TokioAsyncResolver;
 use reqwest::Url;
 use std::collections::HashSet;
 use std::convert::Infallible;
 use std::net::IpAddr;
 use std::path::PathBuf;
 use std::pin::Pin;
-use std::task::{ready, Context, Poll};
+use std::task::{Context, Poll, ready};
 use std::time::Duration;
 use tokio::sync::mpsc;
 use tokio::time::Interval;

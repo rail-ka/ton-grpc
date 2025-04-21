@@ -1,8 +1,8 @@
 use crate::tlb::ext_blk_ref::ExtBlkRef;
+use toner::tlb::r#as::{Data, Ref, Same};
 use toner::tlb::bits::de::BitReaderExt;
 use toner::tlb::de::args::CellDeserializeWithArgs;
 use toner::tlb::de::{CellParser, CellParserError};
-use toner::tlb::r#as::{Data, Ref, Same};
 
 /// ```tlb
 /// prev_blk_info$_ prev:ExtBlkRef = BlkPrevInfo 0;
