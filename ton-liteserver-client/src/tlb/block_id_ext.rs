@@ -1,4 +1,5 @@
 use crate::tlb::shard_ident::ShardIdent;
+use derive_more::Debug;
 use toner::tlb::bits::de::{BitReader, BitReaderExt, BitUnpack};
 
 /// ```tlb
@@ -12,7 +13,9 @@ use toner::tlb::bits::de::{BitReader, BitReaderExt, BitUnpack};
 pub struct BlockIdExt {
     pub shard_id: ShardIdent,
     pub seq_no: u32,
+    #[debug("{}", hex::encode(root_hash))]
     pub root_hash: [u8; 32],
+    #[debug("{}", hex::encode(file_hash))]
     pub file_hash: [u8; 32],
 }
 

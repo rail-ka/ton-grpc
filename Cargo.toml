@@ -1,15 +1,15 @@
 [workspace]
 resolver = "2"
 members = [
-    "tonlibjson-sys",
+    # "tonlibjson-sys",
     "tl_parser",
     "adnl-tcp",
     "ton-client-util",
-    "tonlibjson-client",
+    # "tonlibjson-client",
     "ton-liteserver-client",
-    "ton-contract",
-    "ton-grpc",
-    "tvm-grpc",
+    # "ton-contract",
+    # "ton-grpc",
+    # "tvm-grpc",
 ]
 
 [workspace.dependencies]
@@ -52,3 +52,4 @@ metrics = "0.24"
 reqwest = { version = "0.12", features = ["rustls-tls", "hickory-dns"], default-features = false }
 hickory-resolver = { version = "0.24", features = ["tokio-runtime"] }
 tokio-retry = "0.3"
+derive_more = { version = "1.0", features = ["debug"] }
