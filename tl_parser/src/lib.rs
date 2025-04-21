@@ -269,8 +269,7 @@ pub fn parse(input: &str) -> anyhow::Result<Vec<Combinator>> {
                 alt((combinator_decl, builtin_combinator_decl)),
                 opt(space_or_comment),
             )),
-        ))
-        .parse(input)
+        ))(input)
         .map_err(|e| anyhow!("parse error: {}", e))?;
 
         if let Some(types) = types {
@@ -288,8 +287,7 @@ pub fn parse(input: &str) -> anyhow::Result<Vec<Combinator>> {
                 alt((functional_combinator_decl, builtin_combinator_decl)),
                 opt(space_or_comment),
             )),
-        ))
-        .parse(input)
+        ))(input)
         .map_err(|e: nom::Err<Error<&str>>| anyhow!("parse error: {}", e))?;
 
         if let Some(funcs) = funcs {
@@ -348,8 +346,7 @@ fn space_or_comment(input: &str) -> nom::IResult<&str, ()> {
         single_line_comment,
         multi_line_comment,
         line_ending,
-    )))
-    .parse(input)?;
+    )))(input)?;
 
     Ok((input, ()))
 }
@@ -380,8 +377,7 @@ fn uc_ident_ns(input: &str) -> nom::IResult<&str, String> {
     let (input, ns) = opt(terminated(
         separated_list1(tag("."), namespace_ident),
         tag("."),
-    ))
-    .parse(input)?;
+    ))(input)?;
     let (input, head) = uc_ident(input)?;
 
     match ns {
@@ -393,7 +389,7 @@ fn uc_ident_ns(input: &str) -> nom::IResult<&str, String> {
 fn lc_ident_full(input: &str) -> nom::IResult<&str, (String, Option<ConstructorNumber>)> {
     let (input, ident) = lc_ident_ns(input)?;
     let (input, combinator_number) =
-        opt(preceded(tag("#"), take_while_m_n(8, 8, is_hex_digit))).parse(input)?;
+        opt(preceded(tag("#"), take_while_m_n(8, 8, is_hex_digit)))(input)?;
 
     match combinator_number {
         None => Ok((input, (ident, None))),
@@ -407,7 +403,7 @@ fn lc_ident_full(input: &str) -> nom::IResult<&str, (String, Option<ConstructorN
 }
 
 fn full_combinator_id(input: &str) -> nom::IResult<&str, (String, Option<ConstructorNumber>)> {
-    alt((lc_ident_full, map(tag("_"), |s: &str| (s.to_owned(), None)))).parse(input)
+    alt((lc_ident_full, map(tag("_"), |s: &str| (s.to_owned(), None))))(input)
 }
 
 fn boxed_type_ident(input: &str) -> nom::IResult<&str, String> {
@@ -444,10 +440,9 @@ fn opt_args(input: &str) -> nom::IResult<&str, Vec<OptionalField>> {
     let (input, names) = preceded(
         tag("{"),
         many1(delimited(space0, var_ident, space_or_comment)),
-    )
-    .parse(input)?;
-    let (input, _) = delimited(space0, tag(":"), space_or_comment).parse(input)?;
-    let (input, type_name) = terminated(type_expr, tag("}")).parse(input)?;
+    )(input)?;
+    let (input, _) = delimited(space0, tag(":"), space_or_comment)(input)?;
+    let (input, type_name) = terminated(type_expr, tag("}"))(input)?;
 
     Ok((
         input,
@@ -463,10 +458,10 @@ fn opt_args(input: &str) -> nom::IResult<&str, Vec<OptionalField>> {
 
 fn combinator_decl(input: &str) -> nom::IResult<&str, Combinator> {
     let (input, (combinator_id, constructor_number)) =
-        preceded(multispace0, full_combinator_id).parse(input)?;
-    let (input, opts) = opt(delimited(space0, opt_args, space_or_comment)).parse(input)?;
-    let (input, fields) = many0(delimited(space0, args, space_or_comment)).parse(input)?;
-    let (input, _) = delimited(multispace0, tag("="), space_or_comment).parse(input)?;
+        preceded(multispace0, full_combinator_id)(input)?;
+    let (input, opts) = opt(delimited(space0, opt_args, space_or_comment))(input)?;
+    let (input, fields) = many0(delimited(space0, args, space_or_comment))(input)?;
+    let (input, _) = delimited(multispace0, tag("="), space_or_comment)(input)?;
     let (input, (functional, combinator_type)) = result_type(input)?;
     let (input, _) = preceded(multispace0, tag(";")).parse(input)?;
 
@@ -486,12 +481,10 @@ fn combinator_decl(input: &str) -> nom::IResult<&str, Combinator> {
 
 fn functional_combinator_decl(input: &str) -> nom::IResult<&str, Combinator> {
     let (input, (combinator_id, constructor_number)) =
-        preceded(multispace0, full_combinator_id).parse(input)?;
-    let (input, opts) =
-        opt(delimited(space_or_comment, opt_args, space_or_comment)).parse(input)?;
-    let (input, fields) =
-        many0(delimited(space_or_comment, args, space_or_comment)).parse(input)?;
-    let (input, _) = delimited(multispace0, tag("="), multispace0).parse(input)?;
+        preceded(multispace0, full_combinator_id)(input)?;
+    let (input, opts) = opt(delimited(space_or_comment, opt_args, space_or_comment))(input)?;
+    let (input, fields) = many0(delimited(space_or_comment, args, space_or_comment))(input)?;
+    let (input, _) = delimited(multispace0, tag("="), multispace0)(input)?;
     let (input, (_, combinator_type)) = result_type(input)?;
     let (input, _) = preceded(multispace0, tag(";")).parse(input)?;
 
@@ -511,9 +504,9 @@ fn functional_combinator_decl(input: &str) -> nom::IResult<&str, Combinator> {
 
 fn builtin_combinator_decl(input: &str) -> nom::IResult<&str, Combinator> {
     let (input, (combinator_id, constructor_number)) =
-        preceded(multispace0, full_combinator_id).parse(input)?;
-    let (input, _) = delimited(multispace0, tag("?"), space_or_comment).parse(input)?;
-    let (input, _) = delimited(multispace0, tag("="), space_or_comment).parse(input)?;
+        preceded(multispace0, full_combinator_id)(input)?;
+    let (input, _) = delimited(multispace0, tag("?"), space_or_comment)(input)?;
+    let (input, _) = delimited(multispace0, tag("="), space_or_comment)(input)?;
     let (input, combinator_type) = boxed_type_ident(input)?;
     let (input, _) = preceded(multispace0, tag(";")).parse(input)?;
 
@@ -536,7 +529,7 @@ fn var_ident(input: &str) -> nom::IResult<&str, String> {
 }
 
 fn var_ident_opt(input: &str) -> nom::IResult<&str, String> {
-    alt((var_ident, map(tag("_"), |s: &str| s.to_owned()))).parse(input)
+    alt((var_ident, map(tag("_"), |s: &str| s.to_owned())))(input)
 }
 
 fn nat_const(input: &str) -> nom::IResult<&str, &str> {
@@ -545,7 +538,7 @@ fn nat_const(input: &str) -> nom::IResult<&str, &str> {
 
 fn conditional_def(input: &str) -> nom::IResult<&str, Condition> {
     let (input, field_ref) = var_ident(input)?;
-    let (input, bit_selector) = opt(preceded(tag("."), nat_const)).parse(input)?;
+    let (input, bit_selector) = opt(preceded(tag("."), nat_const))(input)?;
     let bit_selector = bit_selector
         .map(|n| n.parse::<u32>())
         .transpose()
@@ -575,8 +568,7 @@ fn subexpr(input: &str) -> nom::IResult<&str, String> {
             )),
             |vs: Vec<String>| vs.join("+"),
         ),
-    ))
-    .parse(input)
+    ))(input)
 }
 
 fn type_ident(input: &str) -> nom::IResult<&str, String> {
@@ -584,8 +576,7 @@ fn type_ident(input: &str) -> nom::IResult<&str, String> {
         boxed_type_ident,
         lc_ident_ns,
         map(tag("#"), |s: &str| s.to_owned()),
-    ))
-    .parse(input)
+    ))(input)
 }
 
 fn term(input: &str) -> nom::IResult<&str, String> {
@@ -602,12 +593,11 @@ fn term(input: &str) -> nom::IResult<&str, String> {
         var_ident,
         map(nat_const, |s| s.to_owned()),
         preceded(tag("%"), term),
-    ))
-    .parse(input)
+    ))(input)
 }
 
 fn type_term(input: &str) -> nom::IResult<&str, (bool, String)> {
-    pair(map(opt(tag("!")), |s| s.is_some()), term).parse(input)
+    pair(map(opt(tag("!")), |s| s.is_some()), term)(input)
 }
 
 fn args_1(input: &str) -> nom::IResult<&str, Vec<Field>> {
