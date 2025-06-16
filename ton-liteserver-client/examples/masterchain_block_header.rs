@@ -5,7 +5,7 @@ use ton_liteserver_client::client::LiteServerClient;
 use ton_liteserver_client::tl::{LiteServerGetBlockHeader, LiteServerGetMasterchainInfo};
 use ton_liteserver_client::tlb::merkle_proof::MerkleProof;
 use toner::tlb::bits::de::unpack_bytes;
-use toner::ton::boc::BoC;
+use toner::ton::BoC;
 use tower::ServiceExt;
 
 #[tokio::main]

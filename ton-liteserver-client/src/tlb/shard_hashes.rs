@@ -6,8 +6,8 @@ use toner::tlb::bits::bitvec::field::BitField;
 use toner::tlb::bits::bitvec::order::Msb0;
 use toner::tlb::bits::bitvec::vec::BitVec;
 use toner::tlb::de::{CellDeserialize, CellParser, CellParserError};
-use toner::ton::bin_tree::BinTree;
-use toner::ton::hashmap::HashmapE;
+use toner::ton::r#as::bin_tree::BinTree;
+use toner::ton::r#as::hashmap::HashmapE;
 
 /// ```tlb
 /// _ (HashmapE 32 ^(BinTree ShardDescr)) = ShardHashes;
@@ -46,7 +46,7 @@ mod tests {
     use toner::tlb::bits::bitvec::order::Msb0;
     use toner::tlb::bits::bitvec::vec::BitVec;
     use toner::tlb::bits::de::unpack_fully;
-    use toner::ton::boc::BoC;
+    use toner::ton::BoC;
 
     #[test]
     fn parse_shard_hashes() {

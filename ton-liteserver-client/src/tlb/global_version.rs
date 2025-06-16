@@ -10,10 +10,10 @@ pub struct GlobalVersion {
     pub capabilities: u64,
 }
 
-impl BitUnpack for GlobalVersion {
+impl<'de> BitUnpack<'de> for GlobalVersion {
     fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
     where
-        R: BitReader,
+        R: BitReader<'de>,
     {
         let tag: u8 = reader.unpack_as::<_, NBits<8>>()?;
         if tag != 0xC4 {

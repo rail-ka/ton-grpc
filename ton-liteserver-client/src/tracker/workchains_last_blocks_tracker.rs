@@ -12,7 +12,7 @@ use ton_client_util::actor::Actor;
 use ton_client_util::actor::cancellable_actor::CancellableActor;
 use ton_client_util::router::shard_prefix::ShardPrefix;
 use toner::tlb::bits::de::unpack_bytes_fully;
-use toner::ton::boc::BoC;
+use toner::ton::BoC;
 use tower::{Service, ServiceExt};
 
 pub struct WorkchainsLastBlocksTrackerActor<S> {

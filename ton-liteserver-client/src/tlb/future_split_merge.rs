@@ -12,10 +12,10 @@ pub enum FutureSplitMerge {
     Merge { merge_utime: u32, interval: u32 }, // fsm_merge$11
 }
 
-impl BitUnpack for FutureSplitMerge {
+impl<'de> BitUnpack<'de> for FutureSplitMerge {
     fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
     where
-        R: BitReader,
+        R: BitReader<'de>,
     {
         if !reader.unpack::<bool>()? {
             return Ok(FutureSplitMerge::None);

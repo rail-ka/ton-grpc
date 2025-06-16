@@ -9,10 +9,10 @@ pub struct BlkMasterInfo {
     pub master: ExtBlkRef,
 }
 
-impl BitUnpack for BlkMasterInfo {
+impl<'de> BitUnpack<'de> for BlkMasterInfo {
     fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
     where
-        R: BitReader,
+        R: BitReader<'de>,
     {
         let master = reader.unpack()?;
 

@@ -19,10 +19,10 @@ pub struct BlockIdExt {
     pub file_hash: [u8; 32],
 }
 
-impl BitUnpack for BlockIdExt {
+impl<'de> BitUnpack<'de> for BlockIdExt {
     fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
     where
-        R: BitReader,
+        R: BitReader<'de>,
     {
         let shard_id = reader.unpack()?;
         let seq_no = reader.unpack()?;

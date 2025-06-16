@@ -14,10 +14,10 @@ pub struct ShardIdent {
     pub shard_prefix: u64,
 }
 
-impl BitUnpack for ShardIdent {
+impl<'de> BitUnpack<'de> for ShardIdent {
     fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
     where
-        R: BitReader,
+        R: BitReader<'de>,
     {
         let tag: u8 = reader.unpack_as::<_, NBits<2>>()?;
         if tag != 0x00 {

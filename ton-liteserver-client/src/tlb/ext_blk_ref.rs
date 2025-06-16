@@ -16,10 +16,10 @@ pub struct ExtBlkRef {
     pub file_hash: [u8; 32],
 }
 
-impl BitUnpack for ExtBlkRef {
+impl<'de> BitUnpack<'de> for ExtBlkRef {
     fn unpack<R>(mut reader: R) -> Result<Self, R::Error>
     where
-        R: BitReader,
+        R: BitReader<'de>,
     {
         let end_lt = reader.unpack()?;
         let seq_no = reader.unpack()?;

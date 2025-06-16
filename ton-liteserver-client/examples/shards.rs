@@ -11,7 +11,7 @@ use ton_liteserver_client::tl::{
 use ton_liteserver_client::tlb::merkle_proof::MerkleProof;
 use ton_liteserver_client::tlb::shard_hashes::ShardHashes;
 use toner::tlb::bits::de::unpack_bytes_fully;
-use toner::{tlb::bits::de::unpack_bytes, ton::boc::BoC};
+use toner::{tlb::bits::de::unpack_bytes, ton::BoC};
 use tower::{ServiceBuilder, ServiceExt};
 
 #[tokio::main]
@@ -57,10 +57,10 @@ async fn main() -> Result<(), tower::BoxError> {
                 .oneshot(LiteServerGetBlockHeader::new(block_id))
                 .await?;
 
-            let boc: BoC = unpack_bytes_fully(header.header_proof)?;
+            let boc: BoC = unpack_bytes_fully(&header.header_proof)?;
             let header: MerkleProof = boc.single_root().unwrap().parse_fully()?;
 
-            println!("header = {:?}", header);
+            println!("header = {header:?}");
         }
     }
 
