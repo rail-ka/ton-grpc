@@ -50,10 +50,10 @@ async fn main() -> anyhow::Result<()> {
     let reflection = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(tonic_health::pb::FILE_DESCRIPTOR_SET)
         .register_encoded_file_descriptor_set(tvm::FILE_DESCRIPTOR_SET)
-        .build()
+        .build_v1()
         .unwrap();
 
-    let (mut health_reporter, health_server) = tonic_health::server::health_reporter();
+    let (health_reporter, health_server) = tonic_health::server::health_reporter();
     health_reporter
         .set_serving::<TvmEmulatorServiceServer<TvmEmulatorService>>()
         .await;

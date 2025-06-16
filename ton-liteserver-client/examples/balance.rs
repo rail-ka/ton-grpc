@@ -1,13 +1,13 @@
 use base64::Engine;
-use futures::{StreamExt, stream};
+use futures::{stream, StreamExt};
 use std::net::SocketAddrV4;
 use std::time::Duration;
 use tokio::time::Instant;
-use ton_client_util::discover::{LiteServerDiscover, read_ton_config_from_url_stream};
+use ton_client_util::discover::{read_ton_config_from_url_stream, LiteServerDiscover};
 use ton_client_util::router::balance::Balance;
 use ton_client_util::service::shared::SharedLayer;
 use ton_client_util::service::timeout::TimeoutLayer;
-use ton_liteserver_client::client::{Error, LiteServerClient};
+use ton_liteserver_client::client::Error;
 use ton_liteserver_client::make::MakeClient;
 use ton_liteserver_client::tl::{
     LiteServerGetMasterchainInfo, LiteServerLookupBlock, TonNodeBlockId,
@@ -51,10 +51,7 @@ async fn main() -> Result<(), tower::BoxError> {
                         Ok(e) => *e,
                         Err(e) => Error::Connection(e.to_string()),
                     })
-                    .service(Reconnect::new::<LiteServerClient, ()>(
-                        MakeClient::new(addr, secret_key),
-                        (),
-                    ));
+                    .service(Reconnect::new(MakeClient::new(addr, secret_key), ()));
 
                 anyhow::Ok(Change::Insert(k, client))
             }
